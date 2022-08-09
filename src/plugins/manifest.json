@@ -10,7 +10,7 @@
     },
     "permissions": [],
     "background": {
-     "scripts": ["js/background.js"]
+     "service_worker": ["js/background.js"]
     },
     "icons": {
      "16": "assets/icon.png"
