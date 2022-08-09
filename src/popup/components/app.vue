@@ -1,5 +1,5 @@
 <template>
-  <div>Tag-Tab</div>
+  <div>Tag-Tag</div>
 </template>
 
 <script>
