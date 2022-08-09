@@ -3,14 +3,14 @@
     "name": "Tab-Tag",
     "description": "vue3版本的Edge插件",
     "version": "1.0.0",
-    "browser_action": {
+    "action": {
      "default_title": "Tab-Tag",
      "default_icon": "assets/icon.png",
      "default_popup": "popup.html"
     },
     "permissions": [],
     "background": {
-     "service_worker": ["js/background.js"]
+     "service_worker": "js/background.js"
     },
     "icons": {
      "16": "assets/icon.png"
@@ -18,10 +18,9 @@
     "content_scripts": [
      {
       "matches": ["http://*/*", "https://*/*"],
-      "css": [],
-         "js": [],
+      "css": ["css/popup.css"],
+         "js": ["js/chunk-vendors.js"],
       "run_at": "document_idle"
      }
-    ],
-    "web_accessible_resources": ["js/inject.js"]
+    ]
    }
