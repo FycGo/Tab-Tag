@@ -1,11 +1,19 @@
 <template>
   <div class="popup-body">
+    <ButtonTag />
+    <ButtonSpace />
   </div>
 </template>
 
 <script>
+import ButtonTag from './ButtonTag.vue'
+import ButtonSpace from './ButtonSpace.vue'
 export default {
-
+    components: { 
+      ButtonTag,
+      ButtonSpace
+    
+    }
 }
 </script>
 
