@@ -8,7 +8,9 @@
      "default_icon": "assets/icon.png",
      "default_popup": "popup.html"
     },
-    "permissions": [],
+    "permissions": [
+        "contextMenus"
+    ],
     "background": {
      "service_worker": "js/background.js"
     },
@@ -19,7 +21,7 @@
      {
       "matches": ["http://*/*", "https://*/*"],
       "css": ["css/popup.css"],
-         "js": ["js/chunk-vendors.js"],
+      "js": ["js/inject.js"],
       "run_at": "document_idle"
      }
     ]
