@@ -21,13 +21,13 @@ async function getTabsInformation() {
                         }
                     )
                 }
-                chrome.storage.local.get({ "list": [] }, function (object) {
-                    let dataList = object["list"];
-                    for (let tab of tabsPromise){
-                        dataList.push(tab);
-                    }
-                    chrome.storage.local.set({ "list": dataList });
-                })
+                // chrome.storage.local.get({ "list": [] }, function (object) {
+                //     let dataList = object["list"];
+                //     for (let tab of tabsPromise){
+                //         dataList.push(tab);
+                //     }
+                //     chrome.storage.local.set({ "list": dataList });
+                // })
                 console.log(tabs.length);
                 const tabsJson = JSON.stringify(tabs);
                 console.log(tabsJson);
@@ -59,16 +59,55 @@ async function getTabsInformation() {
 getTabsInformation();
 
 
-
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId == "log") {
-        chrome.storage.local.get({ "list": [] }, function (object) {
-            let dataList = object["list"];
-            dataList.push(info.selectionText);
-            chrome.storage.local.set({ "list": dataList });
-        })
-    }
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.contextMenus.create({
+    id: 'default01',
+    title: "Red",
+    contexts: ["page"],
+    type: "checkbox"
+    });
+    chrome.contextMenus.create({
+    id: 'default02',
+    title: "Green",
+    contexts: ["page"],
+    type: "checkbox"
+    });
+    chrome.contextMenus.create({
+    id: 'default03',
+    title: "Blue",
+    contexts: ["page"],
+    type: "checkbox"
+    });
+    chrome.contextMenus.create({
+    id: 'default04',
+    title: "Orange",
+    contexts: ["page"],
+    type: "checkbox"
+    });
+    chrome.contextMenus.create({
+    id: 'default05',
+    title: "add a new tag",
+    contexts: ["page"],
+    type: "checkbox"
+    });
 });
+
+
+// chrome.contextMenus.onClicked.addListener((info, tab) => {
+//     if (info.menuItemId == "log") {
+//       chrome.storage.local.get({ "list": [] }, function (object) {
+//         let dataList = object["list"];
+//         dataList.push(info.selectionText);
+//         chrome.storage.local.set({ "list": dataList });
+//       })
+//     }
+//   });
+
+// switch to a specified tab
+// chrome.tabs.update(1944205521, {active: true}, () => {
+//     console.log("make first tab active");
+// })
+
 
 // chrome.tabs.onCreated.addListener(() => {
 //     getCurrentTabs().then((tabsPromise) => {

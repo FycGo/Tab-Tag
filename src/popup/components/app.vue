@@ -21,7 +21,7 @@ export default {
 .popup-body {
   width: 350px;
   height: 550px;
-  border-radius: 24px;
+  // border-radius: 24px;
   background: rgba(7, 185, 185, 0.329);
 }
 
