@@ -5,6 +5,7 @@
 </template>
 
 <script>
+/*global chrome*/
 export default {
   props: {
     text: {
@@ -16,10 +17,17 @@ export default {
       type: String,
       default: 'hello',
     },
+    tabId: {
+      type: Number,
+      default: 0,
+    }
   },
 
   methods: {
     handler() {
+      chrome.tabs.update(this.tabId, {active: true}, () => {
+          console.log("make first tab active");
+      })
       this.$emit('click', this.action)
     },
   },
@@ -30,9 +38,7 @@ export default {
 
 <style scoped>
 .menu-item {
-  position: relative;
-  left: 0px;
-  top: 0px;
+  position: static;
   width: 250px;
   height: 30px;
   display: flex;

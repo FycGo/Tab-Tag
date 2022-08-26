@@ -12,45 +12,58 @@ async function getTabsInformation() {
     const PromiseA = chrome.tabs.onCreated.addListener(() => {
         setTimeout(() => {
             getCurrentTabs().then((tabsPromise) => {
-                let tabs = [];
-                for (let tab of tabsPromise){
-                    tabs.push( {
-                            id: tab.id,
-                            title: tab.title,
-                            url: tab.url,
-                        }
-                    )
-                }
-                // chrome.storage.local.get({ "list": [] }, function (object) {
-                //     let dataList = object["list"];
-                //     for (let tab of tabsPromise){
-                //         dataList.push(tab);
-                //     }
-                //     chrome.storage.local.set({ "list": dataList });
-                // })
-                console.log(tabs.length);
-                const tabsJson = JSON.stringify(tabs);
-                console.log(tabsJson);
+                // let tabs = [];
+                // for (let tab of tabsPromise){
+                //     tabs.push( {
+                //             id: tab.id,
+                //             title: tab.title,
+                //             url: tab.url,
+                //         }
+                //     )
+                // }
+                chrome.storage.local.clear(function (){
+                    console.log("clear all storage")
+                });
+                chrome.storage.local.get({ "list": [] }, function (object) {
+                    let dataList = object["list"];
+                    for (let tab of tabsPromise){
+                        dataList.push(tab);
+                    }
+                    chrome.storage.local.set({ "list": dataList });
+                })
+                // console.log(tabs.length);
+                // const tabsJson = JSON.stringify(tabs);
+                // console.log(tabsJson);
             });
-        }, 1000)
+        }, 500)
     });
     const PromiseB = chrome.tabs.onRemoved.addListener(() => {
         setTimeout(() => {
             getCurrentTabs().then((tabsPromise) => {
-                let tabs = [];
-                for (let tab of tabsPromise){
-                    tabs.push( {
-                            id: tab.id,
-                            title: tab.title,
-                            url: tab.url,
-                        }
-                    )
-                }
-                console.log(tabs.length);
-                const tabsJson = JSON.stringify(tabs);
-                console.log(tabsJson);
+                chrome.storage.local.clear(function (){
+                    console.log("clear all storage")
+                });
+                chrome.storage.local.get({ "list": [] }, function (object) {
+                    let dataList = object["list"];
+                    for (let tab of tabsPromise){
+                        dataList.push(tab);
+                    }
+                    chrome.storage.local.set({ "list": dataList });
+                })
+                // let tabs = [];
+                // for (let tab of tabsPromise){
+                //     tabs.push( {
+                //             id: tab.id,
+                //             title: tab.title,
+                //             url: tab.url,
+                //         }
+                //     )
+                // }
+                // console.log(tabs.length);
+                // const tabsJson = JSON.stringify(tabs);
+                // console.log(tabsJson);
             });
-        }, 1000)
+        }, 500)
     });
     const [a, b] = await Promise.all([PromiseA, PromiseB]);
     return [a, b];

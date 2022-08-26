@@ -28,7 +28,7 @@ export default {
 .buttonOn {
     position: absolute;
     left: 170px;
-    top: 20px;
+    top: 8px;
     width: 110px;
     height: 40px;
     display: flex;
@@ -37,13 +37,12 @@ export default {
     padding: 0px 0px;
     border-radius: 8px;
     background: rgba(2, 86, 255, 0.6);
-    z-index: NaN
 }
 
 .buttonOff {
     position: absolute;
     left: 170px;
-    top: 20px;
+    top: 8px;
     width: 110px;
     height: 40px;
     display: flex;
@@ -52,6 +51,5 @@ export default {
     padding: 0px 0px;
     border-radius: 8px;
     background: rgb(212, 217, 226);
-    z-index: NaN
 }
 </style>

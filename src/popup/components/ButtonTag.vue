@@ -26,32 +26,30 @@ export default {
 
 <style scoped>
 .buttonOn {
-    position: absolute;
-    left: 20px;
-    top: 20px;
+    position: relative;
+    left: 0px;
+    top: 0px;
     width: 130px;
-    height: 40px;
+    height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 12px 16px;
     border-radius: 8px;
     background: rgba(2, 86, 255, 0.6);
-    z-index: NaN
 }
 
 .buttonOff {
-    position: absolute;
-    left: 20px;
-    top: 20px;
+    position: relative;
+    left: 0px;
+    top: 0px;
     width: 130px;
-    height: 40px;
+    height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 12px 16px;
     border-radius: 8px;
     background: rgb(251, 251, 251);
-    z-index: NaN
 }
 </style>
