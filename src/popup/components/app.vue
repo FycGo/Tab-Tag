@@ -1,19 +1,42 @@
 <template>
   <div class="popup-body">
-    <ButtonTag />
-    <ButtonSpace />
+    <div>
+      <ButtonTag />
+      <ButtonSpace />
+    </div>
+    <TagItem 
+      @toggle-menu="toggleMenu"></TagItem>
   </div>
 </template>
 
 <script>
+/*global chrome*/
 import ButtonTag from './ButtonTag.vue'
 import ButtonSpace from './ButtonSpace.vue'
+import TagItem from './TagItem.vue'
 export default {
-    components: { 
+    components: {
       ButtonTag,
-      ButtonSpace
-    
-    }
+      ButtonSpace,
+      TagItem
+    },
+    data() {
+      return{
+      }
+    },
+    methods: {
+      toggleMenu(action) {
+        console.log(action);
+        chrome.tabs.update(1944205830, {active: true}, () => {
+            console.log("make first tab active");
+        })
+      },
+
+      toggleDropDown() {
+        this.active = !this.active;
+        console.log(this.active)
+      },
+    },
 }
 </script>
 
