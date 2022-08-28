@@ -28,7 +28,6 @@ export default {
   },
   data() {
     return {
-      tag: "C#",
       active: true,
     }
   },
@@ -37,6 +36,10 @@ export default {
     tabs: {
       type: Array,
       default: () => [],
+    },
+    tag: {
+      type: String,
+      default: 'else',
     }
   },
 
@@ -68,7 +71,7 @@ div.TagItem {
     align-items: left;
     padding: 12px 16px;
     border-radius: 8px;
-    background: rgb(2, 86, 255);
+    background: rgba(208, 25, 244, 0.783);
 }
 .menu {
     position: relative;

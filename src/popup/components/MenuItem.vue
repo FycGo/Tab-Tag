@@ -45,7 +45,7 @@ export default {
   padding: 8px 8px 16px 16px;
   align-self: stretch;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.733);
+  background: rgba(114, 196, 231, 0.733);
   box-sizing: border-box;
   border: 1px solid #1A1A1A;
   display: flex;

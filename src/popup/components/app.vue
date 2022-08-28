@@ -4,7 +4,10 @@
     <hr>
     
     <TagItem 
-      :tabs="tabs"
+      v-for="(tag, index) in tags"
+      :key="index"
+      :tag="tag"
+      :tabs="tagTabs[index]"
       @toggle-menu="toggleMenu"></TagItem>
      
     <!-- <MenuItem v-for="title in titles"
@@ -23,10 +26,40 @@ import ButtonTag from './ButtonTag.vue'
 import TagItem from './TagItem.vue'
 // import MenuItem from './MenuItem.vue';
 
-console.log("refresh popup.html");
 
 export default {
   mounted() {
+      console.log("refresh popup.html");
+      // async function getCurrentTabs() {
+      //     // let queryOptions = { active: true, lastFocusedWindow: true };
+      //     let queryOptions = {};
+      //     // `tab` will either be a `tabs.Tab` instance or `undefined`.
+      //     let tabsPromise = await chrome.tabs.query(queryOptions);
+      //     return tabsPromise;
+      // }
+      // getCurrentTabs().then((tabsPromise) => {
+      //     chrome.storage.local.clear(function (){
+      //         console.log("clear all storage")
+      //     });
+      //     chrome.storage.local.get({ "list": [] }, function (object) {
+      //         let dataList = object["list"];
+      //         for (let tab of tabsPromise){
+      //             dataList.push({
+      //                 tag: "else",
+      //                 id: tab.id,
+      //                 groupId: tab.groupId,
+      //                 windowId: tab.windowId,
+      //                 title: tab.title,
+      //                 url: tab.url,
+      //             });
+      //         }
+      //         chrome.storage.local.set({ "list": dataList });
+      //     })
+      //     // console.log(tabs.length);
+      //     // const tabsJson = JSON.stringify(tabs);
+      //     // console.log(tabsJson);
+      // });
+      //把tag添加进来
     let that = this;
     chrome.storage.local.get({ "list": [] }, function (object) {
       let dataList = object["list"]
@@ -34,16 +67,33 @@ export default {
         // let p = document.createElement("p");
         // p.innerText = "暂无数据";
         // document.body.appendChild(p);
-        return;
+        console.log('no tab');
       }
-      dataList.forEach(function (text) {
+      dataList.forEach(function (tab) {
         // let div = document.createElement("div");
         // div.innerText = text.title;
         // document.body.appendChild(div);
-        that.tabs.push(text);
-      })
-    })
-    return 0;
+        that.tabs.push(tab);
+      });
+      console.log(dataList);
+    });
+    //tag分类
+    setTimeout(() => {
+      console.log(this.tabs);
+      this.tags.forEach(function (tag) {
+          // let div = document.createElement("div");
+          // div.innerText = text.title;
+          // document.body.appendChild(div);
+          // that.tabs.push(text);
+          let itabs = [];
+          that.tabs.forEach(function (tab) {
+            if(tab.tag == tag){
+                itabs.push(tab);
+            }
+          });
+          that.tagTabs.push(itabs);
+      });
+    }, 100);
   },
   // updated() {
   //   let that = this;
@@ -89,10 +139,13 @@ export default {
     // ButtonSpace,
     TagItem,
     // MenuItem
-},
+  },
   data() {
     return{
-      tabs: []
+      tabs: [],
+      test: [{num: 8}, {num: 9}],
+      tags: ["default01", "default02","default03", "default04"],
+      tagTabs: []
     }
   },
   methods: {
