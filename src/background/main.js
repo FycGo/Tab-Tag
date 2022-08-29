@@ -1,6 +1,5 @@
 /*global chrome*/
 async function getCurrentTabs() {
-    // let queryOptions = { active: true, lastFocusedWindow: true };
     let queryOptions = {currentWindow: true};
     // `tab` will either be a `tabs.Tab` instance or `undefined`.
     let tabsPromise = await chrome.tabs.query(queryOptions);
@@ -10,35 +9,36 @@ async function getTab(tabId) {
     const tab = await chrome.tabs.get(tabId);
     return tab;
 }
-setTimeout(() => {
-    getCurrentTabs().then((tabsPromise) => {
-        chrome.storage.local.clear(function (){
-            console.log("clear all storage")
-        });
-        chrome.storage.local.get({ "list": [] }, function (object) {
-            let dataList = object["list"];
-            for (let tab of tabsPromise){
-                dataList.push({
-                    tag: "else",
-                    id: tab.id,
-                    groupId: tab.groupId,
-                    windowId: tab.windowId,
-                    title: tab.title,
-                    url: tab.url,
-                });
-            }
-            chrome.storage.local.set({ "list": dataList });
-        })
-    });
-}, 500);
 
-
+let oneTime = true;
 // when create a new tab, add tab information to chrome.storage.local
 chrome.tabs.onCreated.addListener((tab) => {
-    setTimeout(() => {
-        chrome.storage.local.get({ "list": [] }, function (object) {
-            let dataList = object["list"];
-            setTimeout(() => {
+    if( oneTime == true) {
+        oneTime = false;
+        getCurrentTabs().then((tabsPromise) => {
+            chrome.storage.local.clear(function (){
+                console.log("clear all storage")
+            });
+            chrome.storage.local.get({ "list": [] }, function (object) {
+                let dataList = object["list"];
+                for (let tab of tabsPromise){
+                    dataList.push({
+                        tag: "else",
+                        id: tab.id,
+                        groupId: tab.groupId,
+                        windowId: tab.windowId,
+                        title: tab.title,
+                        url: tab.url,
+                    });
+                }
+                chrome.storage.local.set({ "list": dataList });
+                console.log("oneTime is: " + oneTime);
+            })
+        });
+    }else {
+        setTimeout(() => {
+            chrome.storage.local.get({ "list": [] }, function (object) {
+                let dataList = object["list"];
                 getTab(tab.id).then((nowTab) => {
                     dataList.splice(tab.index, 0 , {
                         tag: "else",
@@ -49,11 +49,13 @@ chrome.tabs.onCreated.addListener((tab) => {
                         url: nowTab.url,
 
                     });
-                })
-            }, 300);
-            setTimeout(() => {chrome.storage.local.set({ "list": dataList })}, 400);
-        })
-    }, 500)
+                }).then(() => {
+                    chrome.storage.local.set({ "list": dataList });
+                    console.log("oneTime is: " + oneTime);
+                });
+            })
+        }, 1500)
+    }
 });
 // when remove a new tab, delete tab information from chrome.storage.local
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
