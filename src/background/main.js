@@ -24,10 +24,10 @@ async function getCurrentTab() {
 
 
 
-// when create a new tab, add tab information to chrome.storage.local
+// when create a new tab, add tab information to chrome.storage.session
 chrome.tabs.onCreated.addListener((tab) => {
     setTimeout(() => {
-        chrome.storage.local.get({ "list": [] }, function (object) {
+        chrome.storage.session.get({ "list": [] }, function (object) {
             let dataList = object["list"];
             getTab(tab.id).then((nowTab) => {
                 dataList.splice(tab.index, 0 , {
@@ -40,7 +40,7 @@ chrome.tabs.onCreated.addListener((tab) => {
 
                 });
             }).then(() => {
-                chrome.storage.local.set({ "list": dataList });
+                chrome.storage.session.set({ "list": dataList });
                 console.log("already create a new tab");
             });
         })
@@ -48,23 +48,23 @@ chrome.tabs.onCreated.addListener((tab) => {
 });
 
 
-// when remove a new tab, delete tab information from chrome.storage.local
+// when remove a new tab, delete tab information from chrome.storage.session
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     console.log("onRemoved " + removeInfo);
-    chrome.storage.local.get({ "list": [] }, function (object) {
+    chrome.storage.session.get({ "list": [] }, function (object) {
         let dataList = object["list"];
         const isTabId = (element) => element.id == tabId;
         let index = dataList.findIndex(isTabId);
         dataList.splice(index, 1)
-        chrome.storage.local.set({ "list": dataList });
+        chrome.storage.session.set({ "list": dataList });
     });
 });
 
-// when activate a tab, update tab information of chrome.storage.local
+// when activate a tab, update tab information of chrome.storage.session
 chrome.tabs.onActivated.addListener((activateInfo) => {
     setTimeout(() => {
 
-        chrome.storage.local.get({ "list": [] }, function (object) {
+        chrome.storage.session.get({ "list": [] }, function (object) {
             let dataList = object["list"];
             try {
                 getTab(activateInfo.tabId).then((nowTab) => {
@@ -73,7 +73,7 @@ chrome.tabs.onActivated.addListener((activateInfo) => {
                     dataList[index].title = nowTab.title;
                     dataList[index].url = nowTab.url;
                 }).then(() => {
-                    chrome.storage.local.set({ "list": dataList });
+                    chrome.storage.session.set({ "list": dataList });
                     console.log("onActivated: " + activateInfo.tabId);
                 });
             }
@@ -86,20 +86,20 @@ chrome.tabs.onActivated.addListener((activateInfo) => {
 
 
 
-// when update a tab, update tab information of chrome.storage.local
+// when update a tab, update tab information of chrome.storage.session
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log("onUpdated " + changeInfo);
     setTimeout(() => {
-        chrome.storage.local.get({ "list": [] }, function (object) {
+        chrome.storage.session.get({ "list": [] }, function (object) {
             let dataList = object["list"];
             const isTabId = (element) => element.id == tabId;
             let index = dataList.findIndex(isTabId);
             if(index == -1) {
                 getCurrentTabs().then((tabsPromise) => {
-                    chrome.storage.local.clear(function (){
+                    chrome.storage.session.clear(function (){
                         console.log("clear all storage")
                     });
-                    chrome.storage.local.get({ "list": [] }, function (object) {
+                    chrome.storage.session.get({ "list": [] }, function (object) {
                         let dataList = object["list"];
                         for (let tab of tabsPromise){
                             dataList.push({
@@ -111,7 +111,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                                 url: tab.url,
                             });
                         }
-                        chrome.storage.local.set({ "list": dataList });
+                        chrome.storage.session.set({ "list": dataList });
                         console.log("already get tabs information");
                     })
                 });
@@ -121,15 +121,15 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                 dataList[index].windowId = tab.windowId;
                 dataList[index].title = tab.title;
                 dataList[index].url = tab.url;
-                chrome.storage.local.set({ "list": dataList });
+                chrome.storage.session.set({ "list": dataList });
             }
         })
     }, 500);
 });
-// when replace a tab, update tab information of chrome.storage.local
+// when replace a tab, update tab information of chrome.storage.session
 chrome.tabs.onReplaced.addListener((addedTabId, removedTabId) => {
     setTimeout(() => {
-        chrome.storage.local.get({ "list": [] }, function (object) {
+        chrome.storage.session.get({ "list": [] }, function (object) {
             let dataList = object["list"];
             const isTabId = (element) => element.id == removedTabId;
             let index = dataList.findIndex(isTabId);
@@ -140,7 +140,7 @@ chrome.tabs.onReplaced.addListener((addedTabId, removedTabId) => {
                 dataList[index].title = tab.title;
                 dataList[index].url = tab.url;
             }).then(() => {
-                chrome.storage.local.set({ "list": dataList });
+                chrome.storage.session.set({ "list": dataList });
                 console.log("onReplaced: replace " + addedTabId + "from " + removedTabId);
             });
         })
@@ -149,7 +149,7 @@ chrome.tabs.onReplaced.addListener((addedTabId, removedTabId) => {
 
 // 监听消息
 chrome.runtime.onMessage.addListener(data => {
-    chrome.storage.local.get({ "list": [] }, function (object) {
+    chrome.storage.session.get({ "list": [] }, function (object) {
         let dataList = object["list"];
         let index = 0;
         getCurrentTab().then((currentTab) => {
@@ -164,7 +164,7 @@ chrome.runtime.onMessage.addListener(data => {
                     dataList[index].tag.push(oneTag);
                 }
             });
-            chrome.storage.local.set({ "list": dataList });
+            chrome.storage.session.set({ "list": dataList });
         }); 
     });
 });
@@ -209,7 +209,7 @@ chrome.runtime.onInstalled.addListener(() => {
 //鼠标右键菜单点击响应事件
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     if (info.menuItemId == "default01") {
-        chrome.storage.local.get({ "list": [] }, function (object) {
+        chrome.storage.session.get({ "list": [] }, function (object) {
             let dataList = object["list"]
             if(dataList.length == 0) {
                 console.log('no tab');
@@ -221,11 +221,11 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                     }
                 }
             });
-            chrome.storage.local.set({ "list": dataList });
+            chrome.storage.session.set({ "list": dataList });
         })
     }
     if (info.menuItemId == "default02") {
-        chrome.storage.local.get({ "list": [] }, function (object) {
+        chrome.storage.session.get({ "list": [] }, function (object) {
             let dataList = object["list"]
             if(dataList.length == 0) {
                 console.log('no tab');
@@ -237,11 +237,11 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                     }
                 }
             });
-            chrome.storage.local.set({ "list": dataList });
+            chrome.storage.session.set({ "list": dataList });
         })
     }
     if (info.menuItemId == "default03") {
-        chrome.storage.local.get({ "list": [] }, function (object) {
+        chrome.storage.session.get({ "list": [] }, function (object) {
             let dataList = object["list"]
             if(dataList.length == 0) {
                 console.log('no tab');
@@ -253,11 +253,11 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                     }
                 }
             });
-            chrome.storage.local.set({ "list": dataList });
+            chrome.storage.session.set({ "list": dataList });
         })
     }
     if (info.menuItemId == "default04") {
-        chrome.storage.local.get({ "list": [] }, function (object) {
+        chrome.storage.session.get({ "list": [] }, function (object) {
             let dataList = object["list"]
             if(dataList.length == 0) {
                 console.log('no tab');
@@ -269,11 +269,11 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                     }
                 }
             });
-            chrome.storage.local.set({ "list": dataList });
+            chrome.storage.session.set({ "list": dataList });
         })
     }
     if (info.menuItemId == "default05") {
-        chrome.storage.local.get({ "list": [] }, function (object) {
+        chrome.storage.session.get({ "list": [] }, function (object) {
             let dataList = object["list"]
             if(dataList.length == 0) {
                 console.log('no tab');
@@ -285,7 +285,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                     }
                 }
             });
-            chrome.storage.local.set({ "list": dataList });
+            chrome.storage.session.set({ "list": dataList });
             console.log(dataList);
         })
     }

@@ -1,8 +1,31 @@
 <template>
   <div class="popup-body">
-    <ButtonTag />
+    <h1>Tag标签页</h1>
     <hr>
-    
+    <button class="bookmarks" id="show-modal" @click="showModal = true">add bookmarks</button>
+
+    <Teleport to="body">
+      <!-- 使用这个 modal 组件，传入 prop -->
+      <modal :tags="tagsChecked" :show="showModal" @close="addBookmarks">
+        <template #header>
+          <h3>请选择你要添加到书签的Tag:</h3>
+        </template>
+      </modal>
+    </Teleport> 
+
+
+    <button class="share" id="show-share" @click="showShare = true">share tabs</button>
+
+    <Teleport to="body">
+      <!-- 使用这个 modal 组件，传入 prop -->
+      <share :tags="tagsChecked" :show="showShare" @close="shareTabs" @closeShare="showShare = false">
+        <template #header>
+          <h3>请选择你要分享的Tag:</h3>
+        </template>
+      </share>
+    </Teleport> 
+
+
     <TagItem 
       v-for="(tag, index) in tags"
       :key="index"
@@ -15,9 +38,9 @@
 
 <script>
 /*global chrome*/
-import ButtonTag from './ButtonTag.vue'
-// import ButtonSpace from './ButtonSpace.vue'
 import TagItem from './TagItem.vue'
+import Modal from './AddBookmarks.vue'
+import Share from './ShareTabs.vue'
 
 
 export default {
@@ -26,8 +49,8 @@ export default {
     let that = this;  // Save component instance to that
 
 
-    // get chrome.storage.local information
-    chrome.storage.local.get({ "list": [] }, function (object) {
+    // get chrome.storage.session information
+    chrome.storage.session.get({ "list": [] }, function (object) {
       let dataList = object["list"]
       if(dataList.length == 0) {
         console.log('no tab');
@@ -43,6 +66,10 @@ export default {
           tab.tag.forEach(function (tagItem) {
             if(!(that.tags.includes(tagItem))) {
               that.tags.unshift(tagItem);
+              that.tagsChecked.unshift({
+                tag: tagItem,
+                checked: false,
+              });
             }
           });
         });
@@ -67,21 +94,74 @@ export default {
     }, 200);
   },
   components: {
-    ButtonTag,
-    // ButtonSpace,
     TagItem,
+    Modal,
+    Share,
   },
   data() {
     return{
       tabs: [],
-      // tags: ["default01", "default02","default03", "default04"],
       tags: [],
-      tagTabs: []
+      tagTabs: [],
+      tagsChecked: [],
+      showModal: false,
+      showShare: false,
     }
   },
   methods: {
     toggleMenu(action) {
       console.log(action);
+    },
+    addBookmarks(){
+      let checkedTags = [];
+      let that = this;
+      this.tagsChecked.forEach(function (tagChecked) {
+          if(tagChecked.checked == true) {
+            checkedTags.push(tagChecked.tag);
+            tagChecked.checked == false;
+          }
+      });
+      checkedTags.forEach(function (checkedTag) {
+          chrome.bookmarks.create(
+            {'title': checkedTag},
+            function(newFolder) {
+              that.tabs.forEach(function (tab) {
+                if(tab.tag.includes(checkedTag)) {
+                  chrome.bookmarks.create({
+                    'parentId': newFolder.id,
+                    'title': tab.title,
+                    'url': tab.url,
+                  }); 
+                }
+              });
+              console.log("added folder: " + newFolder.title);
+            }, 
+          );
+      });
+      this.showModal = false;
+    },
+    shareTabs(){
+      let checkedTags = [];
+      let that = this;
+      let shareText = "";
+      this.tagsChecked.forEach(function (tagChecked) {
+          if(tagChecked.checked == true) {
+            checkedTags.push(tagChecked.tag);
+            tagChecked.checked == false;
+          }
+      });
+      checkedTags.forEach(function (checkedTag) {
+        that.tabs.forEach(function (tab) {
+          if(tab.tag.includes(checkedTag)) {
+            shareText = shareText + tab.title + ": " + tab.url + '\n';
+          }
+        });
+      });
+      navigator.clipboard.writeText(shareText).then(()=> {
+        console.log("复制成功");
+      }, (error)=> {
+        console.log(error)
+      })
     },
   },
 }
@@ -92,16 +172,19 @@ export default {
   width: 350px;
   height: 550px;
   // border-radius: 24px;
-  background: rgba(255, 255, 255, 0);
+  background: rgba(7, 185, 185, 0.3);
 }
-.topbar {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  padding: 5px;
-  width: 350px;
-  height: 40px;
-  background: rgba(96, 207, 142, 0);
+.bookmarks {
+  position: relative;
+  float: left;
+  background: rgba(2, 86, 255, 0.6);
+  border-radius: 8px;
+}
+.share {
+  position: relative;
+  float: right;
+  background: rgba(2, 86, 255, 0.6);
+  border-radius: 8px;
 }
 
 </style>

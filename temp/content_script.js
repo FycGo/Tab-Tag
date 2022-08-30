@@ -9,7 +9,6 @@ button.style.background = '#E8FFE8';
 const div = document.createElement('div');
 div.style.display = 'flex';
 div.style.justifyContent= "center";
-div.style.borderRadius = '8px';
 div.insertAdjacentElement('afterbegin', button);
 document.body.insertAdjacentElement('afterbegin', div);
 
@@ -46,9 +45,11 @@ button.addEventListener('click', function () {
         addTag.style.top = "30%";
         addTag.style.left = "30%";
         addTag.style.width = "250px";
-        addTag.style.background = '#6666FF';
+        // addTag.style.height = "200px";
+        // div.style.display = 'flex';
+        // div.style.justifyContent= "center";
+        addTag.style.background = '#E8FFE8';
         addTag.style.zIndex = '9999';
-        addTag.style.borderRadius = '8px';
 
 
         //done
@@ -56,7 +57,6 @@ button.addEventListener('click', function () {
         done.textContent = '添加';
         done.id = 'done';
         done.style.float = "left";
-        done.style.borderRadius = '8px';
         addTag.insertAdjacentElement('beforeend', done);
 
 
@@ -65,7 +65,6 @@ button.addEventListener('click', function () {
         close.textContent = '关闭';
         close.id = 'close';
         close.style.float = "right";
-        close.style.borderRadius = '8px';
         addTag.insertAdjacentElement('beforeend', close);
         addTag.insertAdjacentElement('beforeend', document.createElement('br'));
         addTag.insertAdjacentElement('beforeend', document.createElement('br'));
@@ -74,16 +73,27 @@ button.addEventListener('click', function () {
         const tagText = document.createElement('input');
         tagText.type = "text";
         tagText.style.float = "left";
-        tagText.style.borderRadius = '8px';
         tagText.id = "tagText";
-        const note = document.createElement('h');
-        note.innerHTML = "请输入Tag，并在输入完成后点击添加";
-        note.style.position = "static";
-        addTag.insertAdjacentElement('beforeend', note);
-        addTag.insertAdjacentElement('beforeend', document.createElement('br'));
         addTag.insertAdjacentElement('beforeend', tagText);
+        addTag.insertAdjacentElement('beforeend', document.createElement('br'));
+        addTag.insertAdjacentElement('beforeend', document.createElement('br'));
 
 
+        // 添加tag条目
+        tags.forEach(function (tag) {
+            const form = document.createElement('form');
+            const tagItem = document.createElement('input');
+            tagItem.type = "checkbox";
+            tagItem.style.float = "left";
+            tagItem.id = tag;
+            tagItem.value = tag;
+            form.innerHTML = tag;
+            form.insertAdjacentElement('beforeend', document.createElement('br'));
+            form.insertAdjacentElement('beforeend', document.createElement('br'));
+            form.insertAdjacentElement('afterbegin', tagItem);
+            addTag.insertAdjacentElement('beforeend', form);
+        });
+        
         document.body.insertAdjacentElement('beforeend', addTag);
 
 
@@ -102,6 +112,11 @@ button.addEventListener('click', function () {
             if( tagText != "") {
                 newTags.push(tagText);
             }
+            tags.forEach(function (tag){
+                if (document.getElementById(tag).checked == true) {
+                    newTags.push(tag);
+                }
+            });
             chrome.runtime.sendMessage('', {
                 addTags: newTags,
             }).then(() => {
