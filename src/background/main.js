@@ -174,32 +174,26 @@ chrome.runtime.onMessage.addListener(data => {
 // 鼠标右键菜单
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
-    id: 'default01',
-    title: "default01",
+    id: 'Red',
+    title: "Red",
     contexts: ["all"],
     type: "normal"
     });
     chrome.contextMenus.create({
-    id: 'default02',
-    title: "default02",
+    id: 'Blue',
+    title: "Blue",
     contexts: ["all"],
     type: "normal"
     });
     chrome.contextMenus.create({
-    id: 'default03',
-    title: "default03",
+    id: 'Orange',
+    title: "Orange",
     contexts: ["all"],
     type: "normal"
     });
     chrome.contextMenus.create({
-    id: 'default04',
-    title: "default04",
-    contexts: ["all"],
-    type: "normal"
-    });
-    chrome.contextMenus.create({
-    id: 'default05',
-    title: "default05",
+    id: 'Yellow',
+    title: "Yellow",
     contexts: ["all"],
     type: "normal"
     });
@@ -208,7 +202,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
 //鼠标右键菜单点击响应事件
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId == "default01") {
+    if (info.menuItemId == "Red") {
         chrome.storage.session.get({ "list": [] }, function (object) {
             let dataList = object["list"]
             if(dataList.length == 0) {
@@ -224,7 +218,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             chrome.storage.session.set({ "list": dataList });
         })
     }
-    if (info.menuItemId == "default02") {
+    if (info.menuItemId == "Blue") {
         chrome.storage.session.get({ "list": [] }, function (object) {
             let dataList = object["list"]
             if(dataList.length == 0) {
@@ -240,7 +234,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             chrome.storage.session.set({ "list": dataList });
         })
     }
-    if (info.menuItemId == "default03") {
+    if (info.menuItemId == "Orange") {
         chrome.storage.session.get({ "list": [] }, function (object) {
             let dataList = object["list"]
             if(dataList.length == 0) {
@@ -256,7 +250,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             chrome.storage.session.set({ "list": dataList });
         })
     }
-    if (info.menuItemId == "default04") {
+    if (info.menuItemId == "Yellow") {
         chrome.storage.session.get({ "list": [] }, function (object) {
             let dataList = object["list"]
             if(dataList.length == 0) {
@@ -270,23 +264,6 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                 }
             });
             chrome.storage.session.set({ "list": dataList });
-        })
-    }
-    if (info.menuItemId == "default05") {
-        chrome.storage.session.get({ "list": [] }, function (object) {
-            let dataList = object["list"]
-            if(dataList.length == 0) {
-                console.log('no tab');
-            }
-            dataList.forEach(function (tabTag) {
-                if(tabTag.id == tab.id) {
-                    if(!(tabTag.tag.includes(info.menuItemId))) {
-                        tabTag.tag.push(info.menuItemId);
-                    }
-                }
-            });
-            chrome.storage.session.set({ "list": dataList });
-            console.log(dataList);
         })
     }
 });

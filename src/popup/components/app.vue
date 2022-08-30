@@ -18,7 +18,7 @@
 
     <Teleport to="body">
       <!-- 使用这个 modal 组件，传入 prop -->
-      <share :tags="tagsChecked" :show="showShare" @close="shareTabs" @closeShare="showShare = false">
+      <share :tags="tagsChecked" :show="showShare" @close="shareTabs" @closeShare="closeShare">
         <template #header>
           <h3>请选择你要分享的Tag:</h3>
         </template>
@@ -140,6 +140,9 @@ export default {
       });
       this.showModal = false;
     },
+    closeShare() {
+      this.showShare = false;
+    },
     shareTabs(){
       let checkedTags = [];
       let that = this;
@@ -172,18 +175,18 @@ export default {
   width: 350px;
   height: 550px;
   // border-radius: 24px;
-  background: rgba(7, 185, 185, 0.3);
+  background: rgb(255, 255, 255);
 }
 .bookmarks {
   position: relative;
   float: left;
-  background: rgba(2, 86, 255, 0.6);
+  background: #fa8072;
   border-radius: 8px;
 }
 .share {
   position: relative;
   float: right;
-  background: rgba(2, 86, 255, 0.6);
+  background: #ee82ee;
   border-radius: 8px;
 }
 
