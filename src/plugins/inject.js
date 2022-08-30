@@ -1,4 +1,6 @@
+/*global chrome*/
 console.log("The script has been injected");
+
 
 const button = document.createElement('button');
 button.textContent = '点击选择Tag';
@@ -51,7 +53,7 @@ button.addEventListener('click', function () {
 
         //done
         const done = document.createElement('button');
-        done.textContent = 'done';
+        done.textContent = '添加';
         done.id = 'done';
         done.style.float = "left";
         addTag.insertAdjacentElement('beforeend', done);
@@ -59,12 +61,14 @@ button.addEventListener('click', function () {
 
         //close
         const close = document.createElement('button');
-        close.textContent = 'close';
+        close.textContent = '关闭';
         close.id = 'close';
         close.style.float = "right";
         addTag.insertAdjacentElement('beforeend', close);
         addTag.insertAdjacentElement('beforeend', document.createElement('br'));
         addTag.insertAdjacentElement('beforeend', document.createElement('br'));
+
+        //tagText
         const tagText = document.createElement('input');
         tagText.type = "text";
         tagText.style.float = "left";
@@ -80,6 +84,8 @@ button.addEventListener('click', function () {
             const tagItem = document.createElement('input');
             tagItem.type = "checkbox";
             tagItem.style.float = "left";
+            tagItem.id = tag;
+            tagItem.value = tag;
             form.innerHTML = tag;
             form.insertAdjacentElement('beforeend', document.createElement('br'));
             form.insertAdjacentElement('beforeend', document.createElement('br'));
@@ -100,10 +106,22 @@ button.addEventListener('click', function () {
         
         //done监听click
         done.addEventListener('click', function () {
-            alert(document.getElementById("tagText").value);
-            // let removebox = document.getElementById("addTag");
-            // removebox.remove();
+            let newTags = [];
+            const tagText = document.getElementById("tagText").value;
+            if( tagText != "") {
+                newTags.push(tagText);
+            }
+            tags.forEach(function (tag){
+                if (document.getElementById(tag).checked == true) {
+                    newTags.push(tag);
+                }
+            });
+            chrome.runtime.sendMessage('', {
+                addTags: newTags,
+            }).then(() => {
+                let removebox = document.getElementById("addTag");
+                removebox.remove();
+            });
         });
-
     }, 500);
 });

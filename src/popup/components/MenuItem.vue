@@ -1,6 +1,7 @@
 <template>
   <div class="menu-item" @click="handler">
-    <span class="text"> {{ text }}</span>
+    <!-- <span class="text"> {{ text }}</span> -->
+    {{ text }}
   </div>
 </template>
 
@@ -50,6 +51,14 @@ export default {
   border: 1px solid #1A1A1A;
   display: flex;
   cursor: pointer;
+  overflow: hidden;  /*溢出隐藏*/
+  text-overflow: ellipsis; /*以省略号...显示*/
+  white-space: nowrap;  /*强制不换行*/ 
+  opacity: 0.7;
+}
+.menu-item:hover {
+  opacity: 1;
+  cursor: pointer;
 }
 
 span.text {
@@ -58,6 +67,9 @@ span.text {
   align-items: right;
   justify-content: right;
   opacity: 0.5;
+  overflow: hidden;  /*溢出隐藏*/
+  text-overflow: ellipsis; /*以省略号...显示*/
+  white-space: nowrap;  /*强制不换行*/ 
 }
 span.text:hover {
   opacity: 1;

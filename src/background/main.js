@@ -13,36 +13,38 @@ async function getTab(tabId) {
     return tab;
 }
 
+// get current tab information
+async function getCurrentTab() {
+    let queryOptions = { active: true, lastFocusedWindow: true };
+    // `tab` will either be a `tabs.Tab` instance or `undefined`.
+    let [tab] = await chrome.tabs.query(queryOptions);
+    return tab;
+}
 
 
 
-let oneTime = true;
+
 // when create a new tab, add tab information to chrome.storage.local
 chrome.tabs.onCreated.addListener((tab) => {
-    if( oneTime == true) {
-        console.log("background.js run");
-        oneTime = false;
-    }else {
-        setTimeout(() => {
-            chrome.storage.local.get({ "list": [] }, function (object) {
-                let dataList = object["list"];
-                getTab(tab.id).then((nowTab) => {
-                    dataList.splice(tab.index, 0 , {
-                        tag: [],
-                        id: nowTab.id,
-                        groupId: nowTab.groupId,
-                        windowId: nowTab.windowId,
-                        title: nowTab.title,
-                        url: nowTab.url,
+    setTimeout(() => {
+        chrome.storage.local.get({ "list": [] }, function (object) {
+            let dataList = object["list"];
+            getTab(tab.id).then((nowTab) => {
+                dataList.splice(tab.index, 0 , {
+                    tag: [],
+                    id: nowTab.id,
+                    groupId: nowTab.groupId,
+                    windowId: nowTab.windowId,
+                    title: nowTab.title,
+                    url: nowTab.url,
 
-                    });
-                }).then(() => {
-                    chrome.storage.local.set({ "list": dataList });
-                    console.log("already create a new tab");
                 });
-            })
-        }, 500)
-    }
+            }).then(() => {
+                chrome.storage.local.set({ "list": dataList });
+                console.log("already create a new tab");
+            });
+        })
+    }, 500)
 });
 
 
@@ -144,6 +146,29 @@ chrome.tabs.onReplaced.addListener((addedTabId, removedTabId) => {
         })
     }, 500);
 });
+
+// 监听消息
+chrome.runtime.onMessage.addListener(data => {
+    chrome.storage.local.get({ "list": [] }, function (object) {
+        let dataList = object["list"];
+        let index = 0;
+        getCurrentTab().then((currentTab) => {
+            for (let i = 0; i < dataList.length; i++) {
+                if( dataList[i].id == currentTab.id) {
+                    index = i;
+                }
+            }
+            console.log("the tab index of currentTab " + index);
+            data.addTags.forEach(function (oneTag) {
+                if (!(dataList[index].tag.includes(oneTag))) {
+                    dataList[index].tag.push(oneTag);
+                }
+            });
+            chrome.storage.local.set({ "list": dataList });
+        }); 
+    });
+});
+
 
 
 // 鼠标右键菜单

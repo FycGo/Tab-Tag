@@ -20,3 +20,20 @@ chrome.tabs.onCreated.addListener((tab) => {
         })
     }, 1500)
 });
+
+
+
+
+
+            tabs.forEach(function (tab) {
+                if (tab.id == currentTab.id) {
+                    newTags.forEach(function (oneTag) {
+                        if (!(tab.tag.includes(oneTag))) {
+                            tab.tag.push(oneTag);
+                        }
+                    });
+                }
+            });
+            chrome.storage.local.set({ "list": tabs });
+            // let removebox = document.getElementById("addTag");
+            // removebox.remove();
