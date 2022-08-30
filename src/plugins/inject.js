@@ -24,16 +24,18 @@ button.addEventListener('click', function () {
         });
     });
     setTimeout(() => {
-         //Assign the type of tag to tags[]
+
+
+        //Assign the type of tag to tags[]
         tabs.forEach(function (tab) {
-            // if((tab.tag != 'else') && !(tags.includes(tab.tag))) {
-            if(!(tags.includes(tab.tag))) {
-                tags.unshift(tab.tag);
+          tab.tag.forEach(function (tagItem) {
+            if(!(tags.includes(tagItem))) {
+              tags.unshift(tagItem);
             }
+          });
         });
 
-
-    //创建完成和关闭按钮
+        // addTag block
         const addTag = document.createElement('div');
         addTag.id = 'addTag';
         addTag.style.position = 'fixed';
@@ -45,11 +47,17 @@ button.addEventListener('click', function () {
         // div.style.justifyContent= "center";
         addTag.style.background = '#E8FFE8';
         addTag.style.zIndex = '9999';
+
+
+        //done
         const done = document.createElement('button');
         done.textContent = 'done';
         done.id = 'done';
         done.style.float = "left";
         addTag.insertAdjacentElement('beforeend', done);
+
+
+        //close
         const close = document.createElement('button');
         close.textContent = 'close';
         close.id = 'close';
@@ -64,7 +72,9 @@ button.addEventListener('click', function () {
         addTag.insertAdjacentElement('beforeend', tagText);
         addTag.insertAdjacentElement('beforeend', document.createElement('br'));
         addTag.insertAdjacentElement('beforeend', document.createElement('br'));
-    // 添加tag条目
+
+
+        // 添加tag条目
         tags.forEach(function (tag) {
             const form = document.createElement('form');
             const tagItem = document.createElement('input');
@@ -76,23 +86,18 @@ button.addEventListener('click', function () {
             form.insertAdjacentElement('afterbegin', tagItem);
             addTag.insertAdjacentElement('beforeend', form);
         });
-
-
-
-        // const form01 = document.createElement('form');
-        // const tagItem01 = document.createElement('input');
-        // tagItem01.type = "checkbox";
-        // tagItem01.style.float = "left";
-        // form01.innerHTML = "default02";
-        // form01.insertAdjacentElement('afterbegin', tagItem01);
         
-        // addTag.insertAdjacentElement('beforeend', form01);
         document.body.insertAdjacentElement('beforeend', addTag);
+
+
         //close监听click
         close.addEventListener('click', function () {
             let removebox = document.getElementById("addTag");
             removebox.remove();
         });
+
+
+        
         //done监听click
         done.addEventListener('click', function () {
             alert(document.getElementById("tagText").value);
@@ -100,9 +105,5 @@ button.addEventListener('click', function () {
             // removebox.remove();
         });
 
-        }, 500);
-
-        // chrome.runtime.sendMessage('', {
-        //     type: 'notification',
-        // });
+    }, 500);
 });

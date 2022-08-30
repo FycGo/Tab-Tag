@@ -35,15 +35,16 @@ export default {
       dataList.forEach(function (tab) {
         that.tabs.push(tab);
       });
-      console.log(dataList);
     });
 
     //Assign the type of tag to tags[]
     setTimeout(() => {
         that.tabs.forEach(function (tab) {
-          if((tab.tag != 'else') && !(that.tags.includes(tab.tag))) {
-            that.tags.unshift(tab.tag);
-          }
+          tab.tag.forEach(function (tagItem) {
+            if(!(that.tags.includes(tagItem))) {
+              that.tags.unshift(tagItem);
+            }
+          });
         });
    }, 100);
 
@@ -55,9 +56,11 @@ export default {
       this.tags.forEach(function (tag) {
           let itabs = [];
           that.tabs.forEach(function (tab) {
-            if(tab.tag == tag){
-                itabs.push(tab);
-            }
+            tab.tag.forEach(function (tagItem) {
+              if(tagItem == tag){
+                  itabs.push(tab);
+              }
+            });
           });
           that.tagTabs.push(itabs);
       });
@@ -72,7 +75,7 @@ export default {
     return{
       tabs: [],
       // tags: ["default01", "default02","default03", "default04"],
-      tags: ['else'],
+      tags: [],
       tagTabs: []
     }
   },

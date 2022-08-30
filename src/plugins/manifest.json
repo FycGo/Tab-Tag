@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Tab-Tag",
-    "description": "vue3版本的Edge插件",
+    "description": "用tag管理你的标签页",
     "version": "1.0.0",
     "action": {
      "default_title": "Tab-Tag",
@@ -19,7 +19,7 @@
         "https://*/*"
     ],
     "background": {
-     "service_worker": "js/background.js"
+     "service_worker": "js/main.js"
     },
     "icons": {
      "16": "assets/icon.png"
