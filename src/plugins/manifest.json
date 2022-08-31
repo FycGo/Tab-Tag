@@ -1,16 +1,26 @@
 {
     "manifest_version": 3,
     "name": "Tab-Tag",
-    "description": "vue3版本的Edge插件",
+    "description": "用tag管理你的标签页",
     "version": "1.0.0",
     "action": {
      "default_title": "Tab-Tag",
      "default_icon": "assets/icon.png",
      "default_popup": "popup.html"
     },
-    "permissions": [],
+    "permissions": [
+        "contextMenus",
+        "tabs",
+        "activeTab",
+        "storage",
+        "bookmarks"
+    ],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ],
     "background": {
-     "service_worker": "js/background.js"
+     "service_worker": "js/main.js"
     },
     "icons": {
      "16": "assets/icon.png"
@@ -19,7 +29,7 @@
      {
       "matches": ["http://*/*", "https://*/*"],
       "css": ["css/popup.css"],
-         "js": ["js/chunk-vendors.js"],
+      "js": ["js/inject.js"],
       "run_at": "document_idle"
      }
     ]

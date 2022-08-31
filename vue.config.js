@@ -14,7 +14,12 @@ const copyFiles = [
    {
      from: path.resolve("src/plugins/inject.js"),
      to: path.resolve("dist/js")
+   },
+   {
+     from: path.resolve("src/background/main.js"),
+     to: path.resolve("dist/js")
    }
+
 ];
 
 // 复制插件
@@ -38,22 +43,22 @@ chromeName.forEach(name => {
 });
 
 module.exports = {
- pages,
- productionSourceMap: false,
- // 配置 content.js background.js
- configureWebpack: {
-  entry: {
-   background: "./src/background/main.js"
+  pages,
+  productionSourceMap: false,
+  // 配置 content.js background.js
+  configureWebpack: {
+    entry: {
+    background: "./src/background/main.js"
+    },
+    output: {
+    filename: "js/[name].js"
+    },
+    plugins
   },
-  output: {
-   filename: "js/[name].js"
-  },
-  plugins
- },
- // 配置 content.css
- css: {
-  extract: {
-   filename: "css/[name].css"
+  // 配置 content.css
+  css: {
+    extract: {
+    filename: "css/[name].css"
+    }
   }
- }
 }
